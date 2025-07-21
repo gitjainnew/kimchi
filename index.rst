@@ -16,7 +16,7 @@ Mochi Health: A Discussion on Affordable Obesity Medication and Support
    :align: center
    :height: 100px
    :alt: Mochi Health sign up
-   :target: https://www.google.com/url?q=https%3A%2F%2Fbcetsamba.in%2Fmochi-health-review-affordable-weight-loss-treatment%2F&sa=D&sntz=1&usg=AOvVaw2C3Hy-PL-Xm_p7gIO_jMnc
+   :target: https://www.google.com
 
 .. image:: khali.png
    :width: 350px
