@@ -4,10 +4,11 @@ Mochi Health Documentation: Review Befor Subscription
 .. meta::
    :description: Official documentation for developers integrating with the Mochi Health platform. Learn how to authenticate, access API endpoints, manage user workflows, and implement virtual obesity care solutions.
 
-.. image:: logo.png
+.. image:: pol.png
    :width: 250px
    :align: center
    :alt: Mochi Health Developer Portal
+
 
 Overview
 --------
