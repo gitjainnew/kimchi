@@ -6,7 +6,7 @@ Mochi Health: A Discussion on Affordable Obesity Medication and Support
    :google-site-verification: VD279M_GngGCAqPG6jAJ9MtlNRCU9GusRHzkw__wRkA
    :description: Learn how Mochi Health is helping Americans manage obesity through affordable weight loss medications, virtual care, and insurance support. Discover eligibility, how it works, and where to apply.
 
-.. image:: khali.jpg
+.. image:: khali.png
    :width: 350px
    :align: center
    :height: 100px
@@ -18,7 +18,7 @@ Mochi Health: A Discussion on Affordable Obesity Medication and Support
    :alt: Mochi Health sign up
    :target: https://www.google.com/url?q=https%3A%2F%2Fbcetsamba.in%2Fmochi-health-review-affordable-weight-loss-treatment%2F&sa=D&sntz=1&usg=AOvVaw2C3Hy-PL-Xm_p7gIO_jMnc
 
-.. image:: khali.jpg
+.. image:: khali.png
    :width: 350px
    :align: center
    :height: 100px
