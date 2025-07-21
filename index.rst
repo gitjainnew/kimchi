@@ -4,7 +4,7 @@ Mochi Health: A Discussion on Affordable Obesity Medication and Support
   :google-site-verification:
   :description:
 
-.. image:: 
+.. image:: pol.png
    :width: 350px
    :align: center
    :height: 100px
