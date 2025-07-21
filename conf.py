@@ -10,9 +10,9 @@ import sys
 
 # -- Project information -----------------------------------------------------
 
-project = 'Mochi Health'
-copyright = '2025, Mochi'
-author = 'Mochi Team'
+project = 'Set Up VIZIO Account'
+copyright = '2025, VIZIO'
+author = 'VIZIO Support Team'
 
 # The full version, including alpha/beta/rc tags
 release = '1.0.0'
@@ -35,8 +35,8 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # html_theme = 'sphinx_rtd_theme'
 
 # Basic page info
-html_title = "Why to Join Mochi Health"
-html_short_title = "Mochi Health"
+html_title = "How to Set Up a VIZIO Account – Complete Guide"
+html_short_title = "VIZIO Setup Guide"
 html_favicon = 'favicon.ico'  # Place the file in the _static or root folder
 
 # Hide "View page source"
