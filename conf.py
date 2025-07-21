@@ -5,7 +5,7 @@ import sys
 project = 'M Health'
 
 # The full version, including alpha/beta/rc tags
-#release = '1.1.1'
+#release = '1.2.1'
 
 
 html_title = ""
