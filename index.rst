@@ -1,112 +1,178 @@
-How to Set Up a VIZIO Account Easily ?
-=============================
+Mochi Health Developer Documentation
+====================================
 
-Get Started with SmartCast, Streaming Apps, and More
+.. meta::
+   :description: Official documentation for developers integrating with the Mochi Health platform. Learn how to authenticate, access API endpoints, manage user workflows, and implement virtual obesity care solutions.
 
-.. raw:: html
+.. image:: logo.png
+   :width: 250px
+   :align: center
+   :alt: Mochi Health Developer Portal
 
-    <div style="text-align:center; margin-top:30px;">
-        <a href="https://pre.im/?2jyGias0V6PkyW32wDGyxASwiYYwgwkedToJN7TKdSZL3mfJar0PeU9Y5WYZY" style="background-color:#007bff; color:#ffffff; padding:12px 28px; font-size:16px; font-weight:bold; text-decoration:none; border-radius:6px; box-shadow:0 4px 6px rgba(0,0,0,0.1); display:inline-block;">
-            Set Up VIZIO Now
-        </a>
-    </div>
+Overview
+--------
 
-Setting up a VIZIO account is quick, easy, and essential for getting the most out of your VIZIO Smart TV. By visiting `vizio.com/setup <https://www.vizio.com/setup>`_, you can register your TV, connect it to SmartCast, and unlock features like app streaming, voice control, and mobile remote access.
+**Mochi Health** provides a virtual obesity treatment platform that offers telehealth services, insurance assistance, and GLP-1 prescription management. This documentation is intended for developers, healthcare partners, and organizations integrating with Mochi’s API to enable eligibility checks, onboarding workflows, and medication management.
 
-What Is vizio.com/setup and Why Is It Important?
-------------------------------------------------
+Key features of the Mochi API:
 
-`vizio.com/setup <https://www.vizio.com/setup>`_ is VIZIO’s official platform to:
+- User eligibility assessment
+- Secure virtual visit scheduling
+- Insurance verification & prior authorization automation
+- Prescription issuance and refill tracking
+- Integration with compounding pharmacy networks
 
-- Register your Smart TV and activate its warranty.
-- Enable SmartCast features for streaming.
-- Sync your device with voice assistants like Alexa or Google Assistant.
-- Access remote control functions via the mobile app.
-- Receive firmware and software updates.
+Getting Started
+---------------
 
-It’s a one-time process that ensures your TV is linked to your account and ready to use all smart features.
+To use the Mochi Health API, you must request API credentials from our [developer onboarding team](mailto:dev@mochihealth.com). Once approved, you'll receive:
 
-Step-by-Step Guide to Creating Your VIZIO Account
--------------------------------------------------
+- A `Client ID` and `Client Secret`
+- Access to sandbox and production environments
+- Rate limits and authentication scopes
 
-1. **Turn On Your VIZIO TV**  
-  
-   Connect it to your Wi-Fi network and wait for the on-screen pairing code.
+Authentication
+--------------
 
-2. **Visit** `vizio.com/setup <#>`_  
-  
-   Open a browser on your phone, tablet, or computer and go to the official site.
+Mochi uses **OAuth 2.0 Client Credentials Flow** to authenticate server-to-server API calls.
 
-3. **Enter the Pairing Code**  
-  
-   Input the unique code displayed on your TV screen.
+Example Token Request:
 
-4. **Create or Sign In to Your Account**  
-  
-   - New users: Click “Create Account” and enter your name, email, and password.  
-  
-   - Returning users: Sign in using your existing credentials.
+.. code-block:: bash
 
-5. **Verify Your Email**  
-  
-   Check your inbox for a confirmation link and click it to activate your account.
+   curl -X POST https://api.mochihealth.com/oauth/token \
+     -H "Content-Type: application/json" \
+     -d '{
+       "client_id": "YOUR_CLIENT_ID",
+       "client_secret": "YOUR_CLIENT_SECRET",
+       "grant_type": "client_credentials"
+   }'
 
-6. **Enjoy SmartCast Features**  
-  
-   Your TV is now registered and ready to stream apps, use voice commands, and more.
+Successful Response:
 
-Advantages of Creating a VIZIO Account
---------------------------------------
+.. code-block:: json
 
-Here are the top reasons to set up your VIZIO account:
+   {
+     "access_token": "eyJhbGciOi...",
+     "token_type": "Bearer",
+     "expires_in": 3600
+   }
 
-- **SmartCast Access** – Stream from Netflix, Hulu, Disney+, YouTube, and others.
-- **Remote Control via App** – Control your TV from your phone.
-- **Software Updates** – Keep your device up-to-date automatically.
-- **Voice Control** – Works with Amazon Alexa, Google Assistant, and Apple HomeKit.
-- **Easy Support & Warranty** – Get quicker access to help and service options.
-- **Multiple Device Management** – Register multiple VIZIO TVs under one account.
+Use the access token in the Authorization header:
 
-FAQs
-----
+.. code-block:: http
 
-**Q1: Do I need a VIZIO account to use my TV?**  
+   Authorization: Bearer <access_token>
 
-No, but without one, SmartCast features, updates, and app access will be limited.
+Eligibility Check API
+----------------------
 
-**Q2: Is vizio.com/setup free?**  
+This endpoint determines if a user qualifies for a GLP-1-based treatment plan.
 
-Yes, setting up your TV and creating a VIZIO account is 100% free.
+**Endpoint:**
 
-**Q3: What if no pairing code appears?**  
+``POST /v1/eligibility/check``
 
-Ensure your TV is connected to the internet. If it still doesn't show, restart the device or contact support.
+**Request Body:**
 
-**Q4: Can I set up the TV without a remote?**  
+.. code-block:: json
 
-Yes! You can use the VIZIO SmartCast app on your phone to complete the setup.
+   {
+     "age": 34,
+     "bmi": 32.5,
+     "comorbidities": ["hypertension"],
+     "state": "CA"
+   }
 
-**Q5: Can I register more than one TV under the same account?**  
+**Response:**
 
-Yes, multiple VIZIO TVs can be linked to a single email account.
+.. code-block:: json
 
-Conclusion
-----------
+   {
+     "eligible": true,
+     "recommended_plan": "GLP1_standard",
+     "requires_physician_review": false
+   }
 
-Setting up your VIZIO account at `vizio.com/setup <https://www.vizio.com/setup>`_ is not just a formality—it’s your gateway to getting the most out of your Smart TV. From personalized controls and streaming access to automatic updates and voice assistant integration, the benefits are worth the few minutes it takes.
+Scheduling a Virtual Visit
+--------------------------
 
-✅ **Quick Links:**
+Use this endpoint to generate a virtual visit link for a patient.
 
-.. raw:: html
+**Endpoint:**
 
-    <div style="text-align:center; margin-top:30px;">
-        <a href="#" style="background-color:#28a745; color:#ffffff; padding:10px 24px; font-size:15px; font-weight:bold; text-decoration:none; border-radius:5px; margin:5px; display:inline-block;">
-            🔗 Set Up VIZIO Now
-        </a>
-        <a href="#" style="background-color:#007bff; color:#ffffff; padding:10px 24px; font-size:15px; font-weight:bold; text-decoration:none; border-radius:5px; margin:5px; display:inline-block;">
-            🔗 VIZIO Support Center
-        </a>
-        <a href="https://fm.ci/?aHR0cHM6Ly92aXppb2hlbHBodWIucmVhZHRoZWRvY3MuaW8vZW4vbGF0ZXN0" style="background-color:#6c757d; color:#ffffff; padding:10px 24px; font-size:15px; font-weight:bold; text-decoration:none; border-radius:5px; margin:5px; display:inline-block;">
-            🔗 Manage My Account
-        </a>
-    </div>
+``POST /v1/appointments/schedule``
+
+**Payload:**
+
+.. code-block:: json
+
+   {
+     "patient_id": "user_345",
+     "preferred_time": "2025-07-25T14:00:00Z",
+     "visit_type": "initial"
+   }
+
+**Response:**
+
+.. code-block:: json
+
+   {
+     "appointment_id": "appt_9823",
+     "join_url": "https://visit.mochihealth.com/join/appt_9823"
+   }
+
+Prescription Management
+-----------------------
+
+Use the `prescriptions` endpoint to view or initiate prescription workflows.
+
+**GET /v1/prescriptions/:patient_id**
+
+**POST /v1/prescriptions/new**
+
+Include information such as dosage, medication type, and compounding preferences. Mochi will handle insurance authorization if applicable.
+
+Webhooks
+--------
+
+Mochi Health supports webhooks for real-time updates on:
+
+- Appointment confirmations
+- Eligibility changes
+- Prescription status updates
+- Insurance decision events
+
+To register a webhook:
+
+.. code-block:: json
+
+   {
+     "event": "prescription.approved",
+     "url": "https://yourdomain.com/webhooks/mochi"
+   }
+
+Security and Compliance
+-----------------------
+
+All endpoints are HIPAA-compliant and enforce strict security headers and token validation.
+
+- OAuth 2.0 with short-lived tokens
+- TLS 1.2 or higher required
+- All patient data encrypted at rest (AES-256)
+
+Support and Contact
+-------------------
+
+For support during development or integration:
+
+- **Email:** devsupport@mochihealth.com
+- **Docs Repo:** https://github.com/mochihealth/dev-docs
+- **API Status:** https://status.mochihealth.com
+- **Production URL:** https://api.mochihealth.com
+
+License
+-------
+
+This documentation and API are © 2025 Mochi Health. All rights reserved.
+
