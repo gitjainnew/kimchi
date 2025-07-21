@@ -1,179 +1,112 @@
-Mochi Health Documentation: Review Befor Subscription
-====================================
+Mochi Health Platform Documentation
+===================================
 
 .. meta::
-   :description: Official documentation for developers integrating with the Mochi Health platform. Learn how to authenticate, access API endpoints, manage user workflows, and implement virtual obesity care solutions.
-
-.. image:: jit.png
-   :width: 250px
-   :align: center
-   :alt: Mochi Health Developer Portal
-
+   :description: Technical documentation for the Mochi Health platform, including eligibility logic, virtual visit workflows, and medication program operations.
 
 Overview
 --------
 
-**Mochi Health** provides a virtual obesity treatment platform that offers telehealth services, insurance assistance, and GLP-1 prescription management. This documentation is intended for developers, healthcare partners, and organizations integrating with Mochi’s API to enable eligibility checks, onboarding workflows, and medication management.
+This documentation describes the internal logic, eligibility flow, and service infrastructure of the **Mochi Health Virtual Obesity Care Platform**. It is intended for developers, clinical operations teams, and healthcare administrators integrating or managing services within the Mochi Health system.
 
-Key features of the Mochi API:
+Platform Goals:
 
-- User eligibility assessment
-- Secure virtual visit scheduling
-- Insurance verification & prior authorization automation
-- Prescription issuance and refill tracking
-- Integration with compounding pharmacy networks
+- Support obesity management through remote care delivery
+- Enable access to GLP-1 medications via clinical evaluation
+- Automate eligibility screening, scheduling, and prescription workflows
 
-Getting Started
+Eligibility Logic
+-----------------
+
+The platform determines eligibility for GLP-1 treatment using the following criteria:
+
+- **Age ≥ 18**
+- **BMI ≥ 30**, or **BMI ≥ 27** with comorbid conditions:
+  - Type 2 Diabetes
+  - Hypertension
+  - Hyperlipidemia
+
+.. note::
+   Mochi does not currently operate in Alabama.
+
+The eligibility engine takes the following inputs:
+
+.. code-block:: json
+
+   {
+     "age": 32,
+     "bmi": 29.7,
+     "conditions": ["hypertension"],
+     "state": "NY"
+   }
+
+If conditions are met, the user is approved for clinical intake.
+
+Virtual Care Workflow
+---------------------
+
+The standard care workflow includes the following steps:
+
+1. **Screening**  
+   A user completes a web-based questionnaire capturing demographics, health status, and history.
+
+2. **Virtual Consult**  
+   Users are matched with licensed physicians for real-time consultations. All visits occur via HIPAA-compliant video.
+
+3. **Medication Evaluation**  
+   The physician determines if a GLP-1 is clinically appropriate. If approved, a prescription is issued.
+
+4. **Insurance Handling**  
+   The platform handles prior authorization with the payer or offers compounding alternatives if uninsured.
+
+5. **Ongoing Management**  
+   Patients receive monthly check-ins, side effect management, and coaching through an assigned care team.
+
+Medication Support
+------------------
+
+Mochi supports both name-brand and compounded GLP-1 medications. Approved drugs include:
+
+- **Wegovy**
+- **Ozempic**
+- **Zepbound**
+
+The system integrates with partner pharmacies for fulfillment and refill scheduling.
+
+Insurance Integration
+---------------------
+
+The platform integrates with third-party insurance APIs to automate:
+
+- Prior authorization submission
+- Re-authorization for renewals
+- Denial appeals (where permitted)
+
+Users can proceed with self-pay if no coverage is available. Compounded options range from **$199 to $250/month**, significantly lower than commercial list prices.
+
+Technical Notes
 ---------------
 
-To use the Mochi Health API, you must request API credentials from our [developer onboarding team](mailto:dev@mochihealth.com). Once approved, you'll receive:
+- All services are hosted in a HIPAA-compliant cloud environment.
+- API access uses token-based OAuth 2.0.
+- Logging and auditing are enforced per healthcare regulatory requirements.
 
-- A `Client ID` and `Client Secret`
-- Access to sandbox and production environments
-- Rate limits and authentication scopes
-
-Authentication
---------------
-
-Mochi uses **OAuth 2.0 Client Credentials Flow** to authenticate server-to-server API calls.
-
-Example Token Request:
-
-.. code-block:: bash
-
-   curl -X POST https://api.mochihealth.com/oauth/token \
-     -H "Content-Type: application/json" \
-     -d '{
-       "client_id": "YOUR_CLIENT_ID",
-       "client_secret": "YOUR_CLIENT_SECRET",
-       "grant_type": "client_credentials"
-   }'
-
-Successful Response:
-
-.. code-block:: json
-
-   {
-     "access_token": "eyJhbGciOi...",
-     "token_type": "Bearer",
-     "expires_in": 3600
-   }
-
-Use the access token in the Authorization header:
-
-.. code-block:: http
-
-   Authorization: Bearer <access_token>
-
-Eligibility Check API
+Troubleshooting & FAQs
 ----------------------
 
-This endpoint determines if a user qualifies for a GLP-1-based treatment plan.
+**Q: What happens if a user is denied insurance coverage?**  
+A: They are offered a compounded medication alternative and notified in the patient dashboard.
 
-**Endpoint:**
+**Q: How long does it take to start treatment?**  
+A: Onboarding and consults are typically completed within 7–10 business days.
 
-``POST /v1/eligibility/check``
+**Q: Can a user opt out of monthly care?**  
+A: Yes, users can cancel membership from their dashboard anytime. Active treatment ends after physician review.
 
-**Request Body:**
-
-.. code-block:: json
-
-   {
-     "age": 34,
-     "bmi": 32.5,
-     "comorbidities": ["hypertension"],
-     "state": "CA"
-   }
-
-**Response:**
-
-.. code-block:: json
-
-   {
-     "eligible": true,
-     "recommended_plan": "GLP1_standard",
-     "requires_physician_review": false
-   }
-
-Scheduling a Virtual Visit
---------------------------
-
-Use this endpoint to generate a virtual visit link for a patient.
-
-**Endpoint:**
-
-``POST /v1/appointments/schedule``
-
-**Payload:**
-
-.. code-block:: json
-
-   {
-     "patient_id": "user_345",
-     "preferred_time": "2025-07-25T14:00:00Z",
-     "visit_type": "initial"
-   }
-
-**Response:**
-
-.. code-block:: json
-
-   {
-     "appointment_id": "appt_9823",
-     "join_url": "https://visit.mochihealth.com/join/appt_9823"
-   }
-
-Prescription Management
------------------------
-
-Use the `prescriptions` endpoint to view or initiate prescription workflows.
-
-**GET /v1/prescriptions/:patient_id**
-
-**POST /v1/prescriptions/new**
-
-Include information such as dosage, medication type, and compounding preferences. Mochi will handle insurance authorization if applicable.
-
-Webhooks
---------
-
-Mochi Health supports webhooks for real-time updates on:
-
-- Appointment confirmations
-- Eligibility changes
-- Prescription status updates
-- Insurance decision events
-
-To register a webhook:
-
-.. code-block:: json
-
-   {
-     "event": "prescription.approved",
-     "url": "https://yourdomain.com/webhooks/mochi"
-   }
-
-Security and Compliance
------------------------
-
-All endpoints are HIPAA-compliant and enforce strict security headers and token validation.
-
-- OAuth 2.0 with short-lived tokens
-- TLS 1.2 or higher required
-- All patient data encrypted at rest (AES-256)
-
-Support and Contact
+License and Contact
 -------------------
 
-For support during development or integration:
+All contents © 2025 Mochi Health Platform. Internal documentation only.
 
-- **Email:** devsupport@mochihealth.com
-- **Docs Repo:** https://github.com/mochihealth/dev-docs
-- **API Status:** https://status.mochihealth.com
-- **Production URL:** https://api.mochihealth.com
-
-License
--------
-
-This documentation and API are © 2025 Mochi Health. All rights reserved.
+For technical issues, contact the operations team via internal support channels.
 
